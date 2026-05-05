@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Status Board</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Mini Status Board</h1>
+      <p class="subtitle">작업 상태를 빠르게 기록하고 관리하세요.</p>
+
+      <form id="status-form" class="status-form">
+        <label for="task-input">새 작업</label>
+        <div class="input-row">
+          <input id="task-input" type="text" placeholder="예: 로그인 UI 구현" required />
+          <button type="submit">추가</button>
+        </div>
+      </form>
+
+      <section>
+        <h2>할 일 목록</h2>
+        <ul id="status-list" class="status-list" aria-live="polite"></ul>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
