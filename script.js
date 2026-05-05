@@ -2,10 +2,43 @@ const form = document.getElementById('status-form');
 const taskInput = document.getElementById('task-input');
 const statusList = document.getElementById('status-list');
 
-const tasks = [];
+const STORAGE_KEY = 'mini-status-board.tasks';
+const tasks = loadTasks();
+
+function loadTasks() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return [];
+
+    const parsed = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .filter((task) => task && typeof task.title === 'string' && typeof task.done === 'boolean')
+      .map((task) => ({
+        title: task.title.trim(),
+        done: task.done,
+      }))
+      .filter((task) => task.title.length > 0);
+  } catch {
+    return [];
+  }
+}
+
+function saveTasks() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
 
 function renderTasks() {
   statusList.innerHTML = '';
+
+  if (tasks.length === 0) {
+    const emptyItem = document.createElement('li');
+    emptyItem.className = 'empty-message';
+    emptyItem.textContent = '아직 등록된 작업이 없습니다.';
+    statusList.appendChild(emptyItem);
+    return;
+  }
 
   tasks.forEach((task, index) => {
     const item = document.createElement('li');
@@ -23,6 +56,7 @@ function renderTasks() {
     toggleButton.textContent = task.done ? '미완료' : '완료';
     toggleButton.addEventListener('click', () => {
       tasks[index].done = !tasks[index].done;
+      saveTasks();
       renderTasks();
     });
 
@@ -31,6 +65,7 @@ function renderTasks() {
     deleteButton.textContent = '삭제';
     deleteButton.addEventListener('click', () => {
       tasks.splice(index, 1);
+      saveTasks();
       renderTasks();
     });
 
@@ -47,7 +82,10 @@ form.addEventListener('submit', (event) => {
   if (!title) return;
 
   tasks.unshift({ title, done: false });
+  saveTasks();
   taskInput.value = '';
   taskInput.focus();
   renderTasks();
 });
+
+renderTasks();
