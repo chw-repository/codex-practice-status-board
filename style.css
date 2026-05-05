@@ -109,3 +109,12 @@ button:hover {
   padding: 6px 10px;
   font-size: 12px;
 }
+
+
+.empty-message {
+  padding: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  text-align: center;
+}
