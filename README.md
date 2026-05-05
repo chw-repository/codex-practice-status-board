@@ -10,6 +10,7 @@ Practice project for Codex Web, Issues, PRs, conflicts, and GitHub Pages.
 - 새 작업 추가
 - 작업 완료/미완료 토글
 - 작업 삭제
+- 브라우저 새로고침 후에도 작업 상태 유지(localStorage)
 
 ### 파일 구성
 - `index.html`: 앱의 기본 마크업
