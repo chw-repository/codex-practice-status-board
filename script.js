@@ -2,11 +2,14 @@ const form = document.getElementById('status-form');
 const taskInput = document.getElementById('task-input');
 const statusList = document.getElementById('status-list');
 
+const TASKS_STORAGE_KEY = 'mini-status-board.tasks';
+
 const STORAGE_KEY = 'mini-status-board.tasks';
 const tasks = loadTasks();
 
 function loadTasks() {
   try {
+    const saved = localStorage.getItem(TASKS_STORAGE_KEY);
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) return [];
 
@@ -15,6 +18,7 @@ function loadTasks() {
 
     return parsed
       .filter((task) => task && typeof task.title === 'string' && typeof task.done === 'boolean')
+      .map((task) => ({ title: task.title.trim(), done: task.done }))
       .map((task) => ({
         title: task.title.trim(),
         done: task.done,
@@ -26,6 +30,11 @@ function loadTasks() {
 }
 
 function saveTasks() {
+  try {
+    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+  } catch {
+    // 저장 공간 제한 또는 브라우저 정책으로 인해 저장이 실패할 수 있음
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
 
@@ -34,6 +43,8 @@ function renderTasks() {
 
   if (tasks.length === 0) {
     const emptyItem = document.createElement('li');
+    emptyItem.className = 'status-item empty';
+    emptyItem.textContent = '아직 등록된 작업이 없습니다. 새 작업을 추가해보세요.';
     emptyItem.className = 'empty-message';
     emptyItem.textContent = '아직 등록된 작업이 없습니다.';
     statusList.appendChild(emptyItem);
